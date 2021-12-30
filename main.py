@@ -41,6 +41,7 @@ def main():
     }
     for col in numerical_cols:
         SPECS[col] = tf.TensorSpec(tf.TensorShape([]), tf.float32, name=col)
+
     pprint(SPECS)
 
     BATCH_SIZE = 32
@@ -59,7 +60,7 @@ def main():
     model.compile(loss='mean_squared_error', optimizer=tf.keras.optimizers.Adam(LEARNING_RATE))
     model.summary()
 
-    history = model.fit(train_ds, epochs=EPOCHS)
+    history = model.fit(train_ds, epochs=EPOCHS, name=numerical_cols)
     # plt.plot(history.history['loss'])
     # plt.show()
 
