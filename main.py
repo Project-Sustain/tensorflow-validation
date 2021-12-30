@@ -47,7 +47,7 @@ def main():
     train_ds = train_ds.map(lambda v: (v, v.pop("target")))
     train_ds = train_ds.batch(BATCH_SIZE)
 
-    train_ds
+    pprint(train_ds)
 
     # learning_rate = 0.01
     # epochs = 200
