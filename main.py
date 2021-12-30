@@ -37,10 +37,9 @@ def main():
     numerical_cols = ['T_MAX']
 
     SPECS = {
+        "dense_input": tf.TensorSpec(tf.TensorShape([]), tf.float32, name="T_MAX"),
         "target": tf.TensorSpec(tf.TensorShape([]), tf.float32, name="T_MIN_SUMMER"),
     }
-    for col in numerical_cols:
-        SPECS[col] = tf.TensorSpec(tf.TensorShape([]), tf.float32, name=col)
 
     pprint(SPECS)
 
