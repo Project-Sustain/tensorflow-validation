@@ -13,9 +13,14 @@ from pprint import pprint
 import tensorflow_io as tfio
 from pymongo import MongoClient
 
+# MongoDB Stuff
 URI = "mongodb://lattice-100:27018/"
 DATABASE = "sustaindb"
 COLLECTION = "mpb_cypress_hill_sk_100m"
+
+# Modeling Stuff
+LEARNING_RATE = 0.01
+EPOCHS = 20
 
 
 def main():
@@ -49,22 +54,12 @@ def main():
 
     pprint(train_ds)
 
-    # learning_rate = 0.01
-    # epochs = 200
-    # n_samples = 30
-    # train_x = np.linspace(0, 20, n_samples)
-    # train_y = 3 * train_x + np.random.randn(n_samples)
-    #
-    # plt.plot(train_x, train_y, 'o')
-    # plt.plot(train_x, 3 * train_x)
-    # plt.show()
-    #
-    # model = tf.keras.Sequential()
-    # model.add(tf.keras.layers.Dense(1, input_shape=[1]))
-    # model.compile(loss='mean_squared_error', optimizer=tf.keras.optimizers.Adam(learning_rate))
-    # model.summary()
-    #
-    # history = model.fit(train_x, train_y, epochs=300)
+    model = tf.keras.Sequential()
+    model.add(tf.keras.layers.Dense(1, input_shape=[1]))
+    model.compile(loss='mean_squared_error', optimizer=tf.keras.optimizers.Adam(LEARNING_RATE))
+    model.summary()
+
+    history = model.fit(train_ds, epochs=EPOCHS)
     # plt.plot(history.history['loss'])
     # plt.show()
 
