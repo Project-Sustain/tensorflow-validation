@@ -28,7 +28,15 @@ def main():
         uri=URI, database=DATABASE, collection=COLLECTION
     )
 
-    dataset
+    # Numeric features.
+    numerical_cols = ['T_MAX']
+
+    SPECS = {
+        "target": tf.TensorSpec(tf.TensorShape([]), tf.float32, name="T_MIN_SUMMER"),
+    }
+    for col in numerical_cols:
+        SPECS[col] = tf.TensorSpec(tf.TensorShape([]), tf.float32, name=col)
+    pprint(SPECS)
 
     # learning_rate = 0.01
     # epochs = 200
