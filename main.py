@@ -7,9 +7,9 @@ import matplotlib.pyplot as plt
 import os
 import time
 from pprint import pprint
-from sklearn.model_selection import train_test_split
-from tensorflow.keras import layers
-from tensorflow.keras.layers.experimental import preprocessing
+#from sklearn.model_selection import train_test_split
+#from tensorflow.keras import layers
+#from tensorflow.keras.layers.experimental import preprocessing
 import tensorflow_io as tfio
 from pymongo import MongoClient
 
