@@ -19,8 +19,9 @@ COLLECTION = "mpb_cypress_hill_sk_100m"
 
 
 def main():
-    print("tensorflow-io version: {}".format(tfio.__version__))
+
     print("tensorflow version: {}".format(tf.__version__))
+    print("tensorflow-io version: {}".format(tfio.__version__))
 
     # Fetch collection from MongoDB as training dataset
     dataset = tfio.experimental.mongodb.MongoDBIODataset(
