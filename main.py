@@ -38,6 +38,17 @@ def main():
         SPECS[col] = tf.TensorSpec(tf.TensorShape([]), tf.float32, name=col)
     pprint(SPECS)
 
+    BATCH_SIZE = 32
+    train_ds = dataset.map(
+        lambda x: tfio.experimental.serialization.decode_json(x, specs=SPECS)
+    )
+
+    # Prepare a tuple of (features, label)
+    train_ds = train_ds.map(lambda v: (v, v.pop("target")))
+    train_ds = train_ds.batch(BATCH_SIZE)
+
+    train_ds
+
     # learning_rate = 0.01
     # epochs = 200
     # n_samples = 30
