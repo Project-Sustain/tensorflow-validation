@@ -34,32 +34,27 @@ def main():
         uri=URI, database=DATABASE, collection=COLLECTION
     )
 
-    # Numeric features.
-    numerical_cols = ['T_MAX']
-
-    SPECS = {
-        "T_MAX": tf.TensorSpec(tf.TensorShape([]), tf.float32, name="T_MAX"),
-        "T_MIN_SUMMER":  tf.TensorSpec(tf.TensorShape([]), tf.float32, name="T_MIN_SUMMER"),
+    tensor_specs = {
+        "T_MAX": tf.TensorSpec(tf.TensorShape([]), tf.float32, name="T_MAX"),  # feature
+        "T_MIN_SUMMER": tf.TensorSpec(tf.TensorShape([]), tf.float32, name="T_MIN_SUMMER")  # label
     }
+    pprint(tensor_specs)
 
-    pprint(SPECS)
-
-    train_ds = dataset.map(
-        lambda x: tfio.experimental.serialization.decode_json(x, specs=SPECS)
+    dataset = dataset.map(
+        lambda x: tfio.experimental.serialization.decode_json(x, specs=tensor_specs)
     )
 
     # Prepare a tuple of (features, label)
-    train_ds = train_ds.map(lambda v: (v, v.pop("T_MIN_SUMMER")))
-    train_ds = train_ds.batch(BATCH_SIZE)
-
-    pprint(train_ds)
+    dataset = dataset.map(lambda v: (v, v.pop("T_MIN_SUMMER")))
+    dataset = dataset.batch(BATCH_SIZE)
+    pprint(dataset)
 
     model = tf.keras.Sequential()
     model.add(tf.keras.layers.Dense(1, input_shape=[1]))
     model.compile(loss='mean_squared_error', optimizer=tf.keras.optimizers.Adam(LEARNING_RATE))
     model.summary()
 
-    history = model.fit(train_ds, epochs=EPOCHS)
+    history = model.fit(dataset, epochs=EPOCHS)
     # plt.plot(history.history['loss'])
     # plt.show()
 
