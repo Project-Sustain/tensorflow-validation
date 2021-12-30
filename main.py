@@ -21,6 +21,7 @@ COLLECTION = "mpb_cypress_hill_sk_100m"
 # Modeling Stuff
 LEARNING_RATE = 0.01
 EPOCHS = 20
+BATCH_SIZE = 32
 
 
 def main():
@@ -37,19 +38,18 @@ def main():
     numerical_cols = ['T_MAX']
 
     SPECS = {
-        "dense_input": tf.TensorSpec(tf.TensorShape([]), tf.float32, name="T_MAX"),
-        "target": tf.TensorSpec(tf.TensorShape([]), tf.float32, name="T_MIN_SUMMER"),
+        "T_MAX": tf.TensorSpec(tf.TensorShape([]), tf.float32, name="T_MAX"),
+        "T_MIN_SUMMER":  tf.TensorSpec(tf.TensorShape([]), tf.float32, name="T_MIN_SUMMER"),
     }
 
     pprint(SPECS)
 
-    BATCH_SIZE = 32
     train_ds = dataset.map(
         lambda x: tfio.experimental.serialization.decode_json(x, specs=SPECS)
     )
 
     # Prepare a tuple of (features, label)
-    train_ds = train_ds.map(lambda v: (v, v.pop("target")))
+    train_ds = train_ds.map(lambda v: (v, v.pop("T_MIN_SUMMER")))
     train_ds = train_ds.batch(BATCH_SIZE)
 
     pprint(train_ds)
