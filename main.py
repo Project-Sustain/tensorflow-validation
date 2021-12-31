@@ -50,7 +50,7 @@ def main():
     pprint(dataset)
 
     model = tf.keras.Sequential()
-    model.add(tf.keras.layers.Dense(1, input_shape=[(1,)]))
+    model.add(tf.keras.layers.Dense(1, input_shape=(1,)))
     model.compile(loss='mean_squared_error', optimizer=tf.keras.optimizers.Adam(LEARNING_RATE))
     model.summary()
 
