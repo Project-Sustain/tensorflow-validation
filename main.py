@@ -67,7 +67,10 @@ def main():
     database = client[DATABASE]
     collection = database[COLLECTION]
 
-    pprint(collection.find_one(filter={'GISJOIN': 'G4802970'}))
+    feature = 'TEMPERATURE_AT_SURFACE_KELVIN'
+    label = 'TEMPERATURE_TROPOPAUSE_KELVIN'
+
+    pprint(collection.find_one({'GISJOIN': 'G4802970'}, {'_id': 0, feature: 1, label: 1}))
     client.close()
 
 
