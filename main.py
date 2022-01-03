@@ -113,6 +113,19 @@ def main():
 
     results = model.evaluate(normalized_features.transpose(), normalized_labels.transpose(), batch_size=128)
     print("test loss, test acc:", results)
+
+    # Save model
+    model.save('saved_model/my_model')
+
+    # Reload model
+    new_model = tf.keras.models.load_model('saved_model/my_model')
+
+    # Check its architecture
+    new_model.summary()
+
+    loss, acc = new_model.evaluate(normalized_features.transpose, normalized_labels.transpose())
+    print('Restored model, accuracy: {:5.2f}%'.format(100 * acc))
+
     # first = np.array(np_features[:1])
     #
     # with np.printoptions(precision=2, suppress=True):
