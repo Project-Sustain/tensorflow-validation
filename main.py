@@ -106,7 +106,7 @@ def main():
     model.compile(loss='mean_squared_error', optimizer=tf.keras.optimizers.Adam(LEARNING_RATE))
     model.summary()
 
-    history = model.fit(normalized_features, normalized_labels, epochs=EPOCHS, validation_split=0.2)
+    history = model.fit(normalized_features.transpose(), normalized_labels.transpose(), epochs=EPOCHS, validation_split=0.2)
     hist = pd.DataFrame(history.history)
     hist['epoch'] = history.epoch
     hist.tail()
