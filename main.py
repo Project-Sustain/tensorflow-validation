@@ -91,10 +91,11 @@ def main():
 
     normalized_features = tf.keras.utils.normalize(
         np_features, axis=-1, order=2
-    )
+    ).transpose()
+
     normalized_labels = tf.keras.utils.normalize(
         np_labels, axis=-1, order=2
-    )
+    ).transpose()
 
     pprint(normalized_features)
     print(f"normalized_features shape: {normalized_features.shape}")
@@ -106,12 +107,12 @@ def main():
     model.compile(loss='mean_squared_error', optimizer=tf.keras.optimizers.Adam(LEARNING_RATE))
     model.summary()
 
-    history = model.fit(normalized_features.transpose(), normalized_labels.transpose(), epochs=EPOCHS, validation_split=0.2)
+    history = model.fit(normalized_features, normalized_labels, epochs=EPOCHS, validation_split=0.2)
     hist = pd.DataFrame(history.history)
     hist['epoch'] = history.epoch
     pprint(hist)
 
-    results = model.evaluate(normalized_features.transpose(), normalized_labels.transpose(), batch_size=128)
+    results = model.evaluate(normalized_features, normalized_labels, batch_size=128)
     print("test loss, test acc:", results)
 
     # Save model
@@ -123,8 +124,8 @@ def main():
     # Check its architecture
     new_model.summary()
 
-    loss, acc = new_model.evaluate(normalized_features.transpose(), normalized_labels.transpose())
-    print('Restored model, accuracy: {:5.2f}%'.format(100 * acc))
+    new_results = new_model.evaluate(normalized_features, normalized_labels, batch_size=128)
+    print("RELOADED test loss, test acc:", new_results)
 
     # first = np.array(np_features[:1])
     #
