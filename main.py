@@ -19,8 +19,8 @@ DATABASE = "sustaindb"
 COLLECTION = "noaa_nam"
 
 # Modeling Stuff
-LEARNING_RATE = 0.01
-EPOCHS = 20
+LEARNING_RATE = 0.001
+EPOCHS = 10
 BATCH_SIZE = 32
 
 
@@ -109,8 +109,10 @@ def main():
     history = model.fit(normalized_features.transpose(), normalized_labels.transpose(), epochs=EPOCHS, validation_split=0.2)
     hist = pd.DataFrame(history.history)
     hist['epoch'] = history.epoch
-    hist.tail()
+    pprint(hist)
 
+    results = model.evaluate(normalized_features.transpose(), normalized_labels.transpose(), batch_size=128)
+    print("test loss, test acc:", results)
     # first = np.array(np_features[:1])
     #
     # with np.printoptions(precision=2, suppress=True):
