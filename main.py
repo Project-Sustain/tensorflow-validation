@@ -123,7 +123,7 @@ def main():
     # Check its architecture
     new_model.summary()
 
-    loss, acc = new_model.evaluate(normalized_features.transpose, normalized_labels.transpose())
+    loss, acc = new_model.evaluate(normalized_features.transpose(), normalized_labels.transpose())
     print('Restored model, accuracy: {:5.2f}%'.format(100 * acc))
 
     # first = np.array(np_features[:1])
