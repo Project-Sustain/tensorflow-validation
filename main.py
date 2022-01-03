@@ -26,37 +26,38 @@ BATCH_SIZE = 32
 
 def using_tfio_dataset():
     # Fetch collection from MongoDB as training dataset
-    dataset = tfio.experimental.mongodb.MongoDBIODataset(
-        uri=URI, database=DATABASE, collection=COLLECTION
-    )
-
-    tensor_specs = {
-        "feature": tf.TensorSpec(tf.TensorShape([]), tf.float32, name="TEMPERATURE_AT_SURFACE_KELVIN"),  # feature
-        "label": tf.TensorSpec(tf.TensorShape([]), tf.float32, name="TEMPERATURE_TROPOPAUSE_KELVIN")  # label
-    }
-    pprint(tensor_specs)
-
-    dataset = dataset.map(
-        lambda x: tfio.experimental.serialization.decode_json(x, specs=tensor_specs)
-    )
+    # dataset = tfio.experimental.mongodb.MongoDBIODataset(
+    #     uri=URI, database=DATABASE, collection=COLLECTION
+    # )
+    #
+    # tensor_specs = {
+    #     "feature": tf.TensorSpec(tf.TensorShape([]), tf.float32, name="TEMPERATURE_AT_SURFACE_KELVIN"),  # feature
+    #     "label": tf.TensorSpec(tf.TensorShape([]), tf.float32, name="TEMPERATURE_TROPOPAUSE_KELVIN")  # label
+    # }
+    # pprint(tensor_specs)
+    #
+    # dataset = dataset.map(
+    #     lambda x: tfio.experimental.serialization.decode_json(x, specs=tensor_specs)
+    # )
 
     # Prepare a tuple of (features, label)
-    dataset = dataset.map(lambda v: (v, v.pop("label")))
-    dataset = dataset.batch(BATCH_SIZE)
-    pprint(dataset)
-
-    model = tf.keras.Sequential()
-    model.add(tf.keras.Input(shape=(1,), name="feature"))
-    model.add(tf.keras.layers.Dense(1, activation='relu'))
-    model.compile(loss='mean_squared_error', optimizer=tf.keras.optimizers.Adam(LEARNING_RATE))
-    model.summary()
-
-    history = model.fit(dataset, epochs=EPOCHS)
-
-    res = model.evaluate(dataset)
-    print("test loss, test acc:", res)
+    # dataset = dataset.map(lambda v: (v, v.pop("label")))
+    # dataset = dataset.batch(BATCH_SIZE)
+    # pprint(dataset)
+    #
+    # model = tf.keras.Sequential()
+    # model.add(tf.keras.Input(shape=(1,), name="feature"))
+    # model.add(tf.keras.layers.Dense(1, activation='relu'))
+    # model.compile(loss='mean_squared_error', optimizer=tf.keras.optimizers.Adam(LEARNING_RATE))
+    # model.summary()
+    #
+    # history = model.fit(dataset, epochs=EPOCHS)
+    #
+    # res = model.evaluate(dataset)
+    # print("test loss, test acc:", res)
     # plt.plot(history.history['loss'])
     # plt.show()
+    pass
 
 
 def main():
@@ -100,15 +101,14 @@ def main():
     print(f"normalized_labels shape: {normalized_labels.shape}")
 
     model = tf.keras.Sequential()
-    model.add(tf.keras.layers.Dense(1, activation='relu'))
+    model.add(tf.keras.layers.Dense(units=1, activation='relu'))
     model.compile(loss='mean_squared_error', optimizer=tf.keras.optimizers.Adam(LEARNING_RATE))
-
     model.summary()
 
-    history = model.fit(normalized_features, normalized_labels, epochs=EPOCHS, validation_split=0.2)
-    hist = pd.DataFrame(history.history)
-    hist['epoch'] = history.epoch
-    hist.tail()
+    # history = model.fit(normalized_features, normalized_labels, epochs=EPOCHS, validation_split=0.2)
+    # hist = pd.DataFrame(history.history)
+    # hist['epoch'] = history.epoch
+    # hist.tail()
 
     # first = np.array(np_features[:1])
     #
