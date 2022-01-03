@@ -73,15 +73,31 @@ def main():
     documents = collection.find({'GISJOIN': 'G4802970'}, {'_id': 0, feature: 1, label: 1})
     features = []
     labels = []
+    num_processed = 0
     for document in documents:
         features.append(document[feature])
         labels.append(document[label])
+        num_processed += 1
+
+        if num_processed % 1000 == 0:
+            print(f"Processed {num_processed} documents...")
 
     np_features = np.array(features)
     np_labels = np.array(labels)
 
     print(f"np_features shape: {np_features.shape}")
     print(f"np_labels shape: {np_labels.shape}")
+
+    normalizer = tf.keras.layers.Normalization(axis=-1)
+    normalizer.adapt(np.array(np_features))
+    print(normalizer.mean.numpy())
+
+    first = np.array(np_features[:1])
+
+    with np.printoptions(precision=2, suppress=True):
+        print('First example:', first)
+        print()
+        print('Normalized:', normalizer(first).numpy())
 
     client.close()
 
