@@ -70,7 +70,19 @@ def main():
     feature = 'TEMPERATURE_AT_SURFACE_KELVIN'
     label = 'TEMPERATURE_TROPOPAUSE_KELVIN'
 
-    pprint(collection.find_one({'GISJOIN': 'G4802970'}, {'_id': 0, feature: 1, label: 1}))
+    documents = collection.find({'GISJOIN': 'G4802970'}, {'_id': 0, feature: 1, label: 1})
+    features = []
+    labels = []
+    for document in documents:
+        features.append(document[feature])
+        labels.append(document[label])
+
+    np_features = np.array(features)
+    np_labels = np.array(labels)
+
+    print(f"np_features shape: {np_features.shape}")
+    print(f"np_labels shape: {np_labels.shape}")
+
     client.close()
 
 
