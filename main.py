@@ -88,8 +88,8 @@ def main():
     print(f"np_features shape: {np_features.shape}")
     print(f"np_labels shape: {np_labels.shape}")
 
-    normalizer = tf.keras.layers.Normalization(axis=-1)
-    normalizer.adapt(np.array(np_features))
+    normalizer = tf.keras.layers.Normalization(axis=0)
+    normalizer.adapt(np_features)
     print(normalizer.mean.numpy())
 
     first = np.array(np_features[:1])
