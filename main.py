@@ -91,9 +91,24 @@ def main():
     normalized_features = tf.keras.utils.normalize(
         np_features, axis=-1, order=2
     )
+    normalized_labels = tf.keras.utils.normalize(
+        np_labels, axis=-1, order=2
+    )
 
     pprint(normalized_features)
     print(f"normalized_features shape: {normalized_features.shape}")
+    print(f"normalized_labels shape: {normalized_labels.shape}")
+
+    model = tf.keras.Sequential()
+    model.add(tf.keras.layers.Dense(1, activation='relu'))
+    model.compile(loss='mean_squared_error', optimizer=tf.keras.optimizers.Adam(LEARNING_RATE))
+
+    model.summary()
+
+    history = model.fit(normalized_features, normalized_labels, epochs=EPOCHS, validation_split=0.2)
+    hist = pd.DataFrame(history.history)
+    hist['epoch'] = history.epoch
+    hist.tail()
 
     # first = np.array(np_features[:1])
     #
