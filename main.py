@@ -16,7 +16,7 @@ from pymongo import MongoClient
 # MongoDB Stuff
 URI = "mongodb://lattice-100:27018/"
 DATABASE = "sustaindb"
-COLLECTION = "mpb_cypress_hill_sk_100m"
+COLLECTION = "noaa_nam"
 
 # Modeling Stuff
 LEARNING_RATE = 0.01
@@ -24,19 +24,15 @@ EPOCHS = 20
 BATCH_SIZE = 32
 
 
-def main():
-
-    print("tensorflow version: {}".format(tf.__version__))
-    print("tensorflow-io version: {}".format(tfio.__version__))
-
+def using_tfio_dataset():
     # Fetch collection from MongoDB as training dataset
     dataset = tfio.experimental.mongodb.MongoDBIODataset(
         uri=URI, database=DATABASE, collection=COLLECTION
     )
 
     tensor_specs = {
-        "T_MAX": tf.TensorSpec(tf.TensorShape([]), tf.float32, name="T_MAX"),  # feature
-        "T_MIN_SUMMER": tf.TensorSpec(tf.TensorShape([]), tf.float32, name="T_MIN_SUMMER")  # label
+        "feature": tf.TensorSpec(tf.TensorShape([]), tf.float32, name="TEMPERATURE_AT_SURFACE_KELVIN"),  # feature
+        "label": tf.TensorSpec(tf.TensorShape([]), tf.float32, name="TEMPERATURE_TROPOPAUSE_KELVIN")  # label
     }
     pprint(tensor_specs)
 
@@ -45,19 +41,34 @@ def main():
     )
 
     # Prepare a tuple of (features, label)
-    dataset = dataset.map(lambda v: (v, v.pop("T_MIN_SUMMER")))
+    dataset = dataset.map(lambda v: (v, v.pop("label")))
     dataset = dataset.batch(BATCH_SIZE)
     pprint(dataset)
 
     model = tf.keras.Sequential()
-    model.add(tf.keras.Input(shape=(1,), name="T_MAX"))
+    model.add(tf.keras.Input(shape=(1,), name="feature"))
     model.add(tf.keras.layers.Dense(1, activation='relu'))
     model.compile(loss='mean_squared_error', optimizer=tf.keras.optimizers.Adam(LEARNING_RATE))
     model.summary()
 
     history = model.fit(dataset, epochs=EPOCHS)
+
+    res = model.evaluate(dataset)
+    print("test loss, test acc:", res)
     # plt.plot(history.history['loss'])
     # plt.show()
+
+
+def main():
+    print("tensorflow version: {}".format(tf.__version__))
+    print("tensorflow-io version: {}".format(tfio.__version__))
+
+    client = MongoClient(URI)
+    database = client[DATABASE]
+    collection = database[COLLECTION]
+
+    pprint(collection.find_one(filter={'GISJOIN': 'G4802970'}))
+    client.close()
 
 
 if __name__ == '__main__':
