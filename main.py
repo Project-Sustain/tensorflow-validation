@@ -93,6 +93,7 @@ def main():
     )
 
     pprint(normalized_features)
+    print(f"normalized_features shape: {normalized_features.shape}")
 
     # first = np.array(np_features[:1])
     #
