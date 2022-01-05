@@ -20,7 +20,7 @@ COLLECTION = "noaa_nam"
 
 # Modeling Stuff
 LEARNING_RATE = 0.001
-EPOCHS = 10
+EPOCHS = 3
 BATCH_SIZE = 32
 
 def main():
