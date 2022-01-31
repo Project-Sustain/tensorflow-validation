@@ -1,4 +1,4 @@
 #!/bin/bash
 
 echo -e "Installing dependencies if they haven't already been installed..."
-python3.8 -m pip install --user numpy==1.16.4 pandas sklearn pymongo tensorflow tensorflow-io
+python3 -m pip install --user -r requirements.txt
