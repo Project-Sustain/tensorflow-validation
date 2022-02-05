@@ -43,7 +43,7 @@ def main():
     client = MongoClient(URI)
     database = client[DATABASE]
     collection = database[COLLECTION]
-    documents = collection.find({'GISJOIN': 'G2000010'}, projection)
+    documents = collection.find({'COUNTY_GISJOIN': 'G2000010'}, projection)
 
     features_and_labels_list = list(map(lambda x: list(x.values()), documents))
     features_and_labels_numpy = np.array(features_and_labels_list)
