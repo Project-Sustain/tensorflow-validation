@@ -1,5 +1,5 @@
 #!/bin/python3
-
+import numpy
 import tensorflow as tf
 import numpy as np
 import pandas as pd
@@ -67,6 +67,10 @@ def main():
     pprint(normalized_features)
     print(f"normalized_features shape: {normalized_features.shape}")
     print(f"normalized_labels shape: {normalized_labels.shape}")
+
+    print(f"Max of normalized_features: {np.max(normalized_features)}")
+    print(f"Max of normalized_labels: {np.max(normalized_labels)}")
+
 
     model = tf.keras.Sequential()
     model.add(tf.keras.Input(shape=(m,)))
