@@ -9,13 +9,13 @@ from pprint import pprint
 from logging import info, error
 
 
-def validate_model(job_id, model_type, documents, feature_fields, label_field, validation_metric, gis_join):
+def validate_model(job_id, model_type, documents, feature_fields, label_field, validation_metric, normalize=True):
     features = []
     labels = []
 
     m = len(feature_fields)
 
-    # Takes documents, a MongoDB Cursor() for m Document objects, containing 2 features and 1 label in the form:
+    # Takes documents, a MongoDB Cursor() for N Document objects, containing m=2 features and 1 label in the form:
     # {
     #   'PRESSURE_AT_SURFACE_PASCAL': 98053.425,                                    // feature_1
     #   'RELATIVE_HUMIDITY_2_METERS_ABOVE_SURFACE_PERCENT': 63.84692993164063,      // feature_2
@@ -26,7 +26,7 @@ def validate_model(job_id, model_type, documents, feature_fields, label_field, v
     #   [98053.425, 63.84692993164063, 296.07669921875],
     #   [feature_1_1, feature_2_1, label_1],
     #   ...
-    #   [feature_1_M, feature_2_M, label_m]
+    #   [feature_1_M, feature_2_M, label_N]
     # ]
     features_and_labels_list = list(map(lambda x: list(x.values()), documents))
 
@@ -38,7 +38,7 @@ def validate_model(job_id, model_type, documents, feature_fields, label_field, v
     #        [9.80545813e+04, 2.84013379e+02, 9.23746105e+01],
     #        [9.80313813e+04, 2.83813379e+02, 9.23746105e+01],
     #        [9.81185813e+04, 2.83713379e+02, 9.21746105e+01]])
-    # ... with a shape of (m, 3)
+    # ... with a shape of (N, 3)
     features_and_labels_numpy = np.array(features_and_labels_list)
 
     # Transpose this 2D array into the following form:
@@ -101,5 +101,3 @@ def validate_model(job_id, model_type, documents, feature_fields, label_field, v
 
     new_results = new_model.evaluate(normalized_features, normalized_labels, batch_size=128)
     info(f"Test loss, test acc: {new_results}")
-
-    client.close()

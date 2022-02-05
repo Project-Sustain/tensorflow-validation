@@ -23,42 +23,41 @@ LEARNING_RATE = 0.001
 EPOCHS = 3
 BATCH_SIZE = 32
 
+
 def main():
     print("tensorflow version: {}".format(tf.__version__))
-    print("tensorflow-io version: {}".format(tfio.__version__))
+
+    m = 2
+
+    features = ['PRESSURE_AT_SURFACE_PASCAL', 'RELATIVE_HUMIDITY_2_METERS_ABOVE_SURFACE_PERCENT']
+    label = 'TEMPERATURE_AT_SURFACE_KELVIN'
+    projection = {
+        "_id": 0,
+    }
+    for feature in features:
+        projection[feature] = 1
+    projection[label] = 1
 
     client = MongoClient(URI)
     database = client[DATABASE]
     collection = database[COLLECTION]
+    documents = collection.find({'GISJOIN': 'G2000010'}, projection)
 
-    feature = 'TEMPERATURE_AT_SURFACE_KELVIN'
-    label = 'TEMPERATURE_TROPOPAUSE_KELVIN'
-
-    documents = collection.find({'GISJOIN': 'G4802970'}, {'_id': 0, feature: 1, label: 1})
-    features = []
-    labels = []
-    num_processed = 0
-    for document in documents:
-        features.append(document[feature])
-        labels.append(document[label])
-        num_processed += 1
-
-        if num_processed % 1000 == 0:
-            print(f"Processed {num_processed} documents...")
-
-    np_features = np.array(features)
-    np_labels = np.array(labels)
-
-    print(f"np_features shape: {np_features.shape}")
-    print(f"np_labels shape: {np_labels.shape}")
+    features_and_labels_list = list(map(lambda x: list(x.values()), documents))
+    features_and_labels_numpy = np.array(features_and_labels_list)
+    features_and_labels_numpy_transposed = features_and_labels_numpy.T
+    features_numpy = features_and_labels_numpy_transposed[:m]
+    labels_numpy = features_and_labels_numpy_transposed[m:]
 
     normalized_features = tf.keras.utils.normalize(
-        np_features, axis=-1, order=2
-    ).transpose()
+        features_numpy, axis=-1, order=2
+    )
 
     normalized_labels = tf.keras.utils.normalize(
-        np_labels, axis=-1, order=2
-    ).transpose()
+        labels_numpy, axis=-1, order=2
+    )
+
+    pprint(normalized_labels)
 
     pprint(normalized_features)
     print(f"normalized_features shape: {normalized_features.shape}")
