@@ -38,6 +38,8 @@ def main():
         projection[feature] = 1
     projection[label] = 1
 
+    pprint(projection)
+
     client = MongoClient(URI)
     database = client[DATABASE]
     collection = database[COLLECTION]
@@ -48,6 +50,9 @@ def main():
     features_and_labels_numpy_transposed = features_and_labels_numpy.T
     features_numpy = features_and_labels_numpy_transposed[:m]
     labels_numpy = features_and_labels_numpy_transposed[m:]
+
+    print(f"features_numpy: {features_numpy}")
+    print(f"labels_numpy: {features_numpy}")
 
     normalized_features = tf.keras.utils.normalize(
         features_numpy, axis=-1, order=2
