@@ -69,7 +69,7 @@ def main():
     print(f"normalized_labels shape: {normalized_labels.shape}")
 
     model = tf.keras.Sequential()
-    model.add(tf.keras.Input(shape=(1,)))
+    model.add(tf.keras.Input(shape=(m,)))
     model.add(tf.keras.layers.Dense(units=1, activation='relu'))
     model.compile(loss='mean_squared_error', optimizer=tf.keras.optimizers.Adam(LEARNING_RATE))
     model.summary()
