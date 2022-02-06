@@ -68,8 +68,8 @@ def main():
     print(f"normalized_features shape: {normalized_features.shape}")
     print(f"normalized_labels shape: {normalized_labels.shape}")
 
-    print(f"Max of normalized_features: {np.max(normalized_features)}")
-    print(f"Max of normalized_labels: {np.max(normalized_labels)}")
+    print(f"normalized_features: max={np.max(normalized_features)}, min={np.min(normalized_features)}")
+    print(f"normalized_labels: max={np.max(normalized_labels)}, min={np.min(normalized_labels)}")
 
     model = tf.keras.Sequential()
     model.add(tf.keras.Input(shape=(m,)))
