@@ -15,7 +15,7 @@ import tensorflow_io as tfio
 from pymongo import MongoClient
 from sklearn.preprocessing import normalize, MinMaxScaler
 
-from tensorflow_validation import validate_model
+from . import validation
 
 # MongoDB Stuff
 URI = "mongodb://lattice-100:27018/"
@@ -49,7 +49,7 @@ def main():
     collection = database[COLLECTION]
     documents = collection.find({'COUNTY_GISJOIN': 'G2000010'}, projection)
 
-    validate_model(
+    validation.validate_model(
         "my_model",
         "Linear Regression",
         documents,
