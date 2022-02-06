@@ -15,7 +15,7 @@ import tensorflow_io as tfio
 from pymongo import MongoClient
 from sklearn.preprocessing import normalize, MinMaxScaler
 
-from . import validation
+import validation
 
 # MongoDB Stuff
 URI = "mongodb://lattice-100:27018/"
