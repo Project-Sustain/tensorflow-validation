@@ -59,12 +59,12 @@ def main():
     ).transpose()
 
     normalized_labels = tf.keras.utils.normalize(
-        labels_numpy, axis=0, order=2
+        labels_numpy, axis=1, order=2
     ).transpose()
 
     pprint(normalized_labels)
-
     pprint(normalized_features)
+
     print(f"normalized_features shape: {normalized_features.shape}")
     print(f"normalized_labels shape: {normalized_labels.shape}")
 
