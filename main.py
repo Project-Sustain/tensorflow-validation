@@ -13,8 +13,9 @@ from pprint import pprint
 #from tensorflow.keras.layers.experimental import preprocessing
 import tensorflow_io as tfio
 from pymongo import MongoClient
-
 from sklearn.preprocessing import normalize, MinMaxScaler
+
+from . import validate_model
 
 # MongoDB Stuff
 URI = "mongodb://lattice-100:27018/"
@@ -48,48 +49,54 @@ def main():
     collection = database[COLLECTION]
     documents = collection.find({'COUNTY_GISJOIN': 'G2000010'}, projection)
 
-    # load into Pandas DF
-    dataframe = pandas.DataFrame(list(documents))
-    pprint(dataframe)
+    validate_model(
+        "my_model",
+        "Linear Regression",
+        documents,
+        features,
+        label,
+        "RMSE",
+        True
+    )
 
-    scaler = MinMaxScaler(feature_range=(0, 1)).fit(dataframe)
-    scaled = scaler.transform(dataframe)
-    scaled_df = pandas.DataFrame(scaled, columns=dataframe.columns)
-    pprint(scaled_df)
-    client.close()
-
-    features_df = scaled_df[features]
-    label_df = scaled_df.pop(label)
-
-    model = tf.keras.Sequential()
-    model.add(tf.keras.Input(shape=(m,)))
-    model.add(tf.keras.layers.Dense(units=1, activation='relu'))
-    model.compile(loss='mean_squared_error', optimizer=tf.keras.optimizers.Adam(LEARNING_RATE))
-    model.summary()
-
-    history = model.fit(features_df, label_df, epochs=EPOCHS, validation_split=0.2)
-    hist = pd.DataFrame(history.history)
-    hist['epoch'] = history.epoch
-    pprint(hist)
-
-    results = model.evaluate(features_df, label_df, batch_size=128)
-    print("test loss, test acc:", results)
-
-    # Save model
-    model.save('saved_model/my_model')
-
-    # Reload model
-    new_model = tf.keras.models.load_model('saved_model/my_model')
-
-    # Check its architecture
-    new_model.summary()
-
-    new_results = new_model.evaluate(features_df, label_df, batch_size=128)
-    print("RELOADED test loss, test acc:", new_results)
-
-    exit(0)
-
-
+    # # load into Pandas DF
+    # dataframe = pandas.DataFrame(list(documents))
+    # pprint(dataframe)
+    #
+    # scaler = MinMaxScaler(feature_range=(0, 1)).fit(dataframe)
+    # scaled = scaler.transform(dataframe)
+    # scaled_df = pandas.DataFrame(scaled, columns=dataframe.columns)
+    # pprint(scaled_df)
+    # client.close()
+    #
+    # features_df = scaled_df[features]
+    # label_df = scaled_df.pop(label)
+    #
+    # model = tf.keras.Sequential()
+    # model.add(tf.keras.Input(shape=(m,)))
+    # model.add(tf.keras.layers.Dense(units=1, activation='relu'))
+    # model.compile(loss='mean_squared_error', optimizer=tf.keras.optimizers.Adam(LEARNING_RATE))
+    # model.summary()
+    #
+    # history = model.fit(features_df, label_df, epochs=EPOCHS, validation_split=0.2)
+    # hist = pd.DataFrame(history.history)
+    # hist['epoch'] = history.epoch
+    # pprint(hist)
+    #
+    # results = model.evaluate(features_df, label_df, batch_size=128)
+    # print("test loss, test acc:", results)
+    #
+    # # Save model
+    # model.save('saved_model/my_model')
+    #
+    # # Reload model
+    # new_model = tf.keras.models.load_model('saved_model/my_model')
+    #
+    # # Check its architecture
+    # new_model.summary()
+    #
+    # new_results = new_model.evaluate(features_df, label_df, batch_size=128)
+    # print("RELOADED test loss, test acc:", new_results)
 
 
 if __name__ == '__main__':
