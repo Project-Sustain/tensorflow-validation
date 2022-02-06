@@ -5,6 +5,7 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 import os
+import pandas
 import time
 from pprint import pprint
 #from sklearn.model_selection import train_test_split
@@ -46,6 +47,13 @@ def main():
     database = client[DATABASE]
     collection = database[COLLECTION]
     documents = collection.find({'COUNTY_GISJOIN': 'G2000010'}, projection)
+
+    # load into Pandas DF
+    dataframe = pandas.DataFrame(list(documents))
+    pprint(dataframe)
+
+    client.close()
+    exit(0)
 
     features_and_labels_list = list(map(lambda x: list(x.values()), documents))
     features_and_labels_numpy = np.array(features_and_labels_list)
