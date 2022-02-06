@@ -52,6 +52,10 @@ def main():
     dataframe = pandas.DataFrame(list(documents))
     pprint(dataframe)
 
+    scaler = MinMaxScaler(feature_range=(0, 1)).fit(dataframe)
+    scaled = scaler.transform(dataframe)
+    scaled_df = pandas.DataFrame(scaled, columns=dataframe.columns)
+    pprint(scaled_df)
     client.close()
     exit(0)
 
