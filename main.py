@@ -57,32 +57,9 @@ def main():
     scaled_df = pandas.DataFrame(scaled, columns=dataframe.columns)
     pprint(scaled_df)
     client.close()
-    exit(0)
 
-    features_and_labels_list = list(map(lambda x: list(x.values()), documents))
-    features_and_labels_numpy = np.array(features_and_labels_list)
-    features_and_labels_numpy_transposed = features_and_labels_numpy.T
-    features_numpy = features_and_labels_numpy_transposed[:m].T
-    labels_numpy = features_and_labels_numpy_transposed[m:].T
-
-    print(f"features_numpy: {features_numpy}")
-    print(f"labels_numpy: {labels_numpy}")
-
-    features_scaler = MinMaxScaler(feature_range=(0, 1)).fit(features_numpy)
-    labels_scaler = MinMaxScaler(feature_range=(0, 1)).fit(labels_numpy)
-
-    normalized_features = features_scaler.transform(features_numpy)
-    normalized_labels = labels_scaler.transform(labels_numpy)
-
-
-    pprint(normalized_labels)
-    pprint(normalized_features)
-
-    print(f"normalized_features shape: {normalized_features.shape}")
-    print(f"normalized_labels shape: {normalized_labels.shape}")
-
-    print(f"normalized_features: max={np.max(normalized_features)}, min={np.min(normalized_features)}")
-    print(f"normalized_labels: max={np.max(normalized_labels)}, min={np.min(normalized_labels)}")
+    features_df = scaled_df[features]
+    label_df = scaled_df.pop(label)
 
     model = tf.keras.Sequential()
     model.add(tf.keras.Input(shape=(m,)))
@@ -90,12 +67,12 @@ def main():
     model.compile(loss='mean_squared_error', optimizer=tf.keras.optimizers.Adam(LEARNING_RATE))
     model.summary()
 
-    history = model.fit(normalized_features, normalized_labels, epochs=EPOCHS, validation_split=0.2)
+    history = model.fit(features_df, label_df, epochs=EPOCHS, validation_split=0.2)
     hist = pd.DataFrame(history.history)
     hist['epoch'] = history.epoch
     pprint(hist)
 
-    results = model.evaluate(normalized_features, normalized_labels, batch_size=128)
+    results = model.evaluate(features_df, label_df, batch_size=128)
     print("test loss, test acc:", results)
 
     # Save model
@@ -107,17 +84,12 @@ def main():
     # Check its architecture
     new_model.summary()
 
-    new_results = new_model.evaluate(normalized_features, normalized_labels, batch_size=128)
+    new_results = new_model.evaluate(features_df, label_df, batch_size=128)
     print("RELOADED test loss, test acc:", new_results)
 
-    # first = np.array(np_features[:1])
-    #
-    # with np.printoptions(precision=2, suppress=True):
-    #     print('First example:', first)
-    #     print()
-    #     print('Normalized:', normalizer(first).numpy())
+    exit(0)
 
-    client.close()
+
 
 
 if __name__ == '__main__':
