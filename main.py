@@ -53,11 +53,13 @@ def main():
     features_numpy = features_and_labels_numpy_transposed[:m].T
     labels_numpy = features_and_labels_numpy_transposed[m:].T
 
-    print(f"features_numpy: {features_numpy}, min={np.min(features_numpy, axis=1)}, max={np.max(features_numpy, axis=1)}")
-    print(f"labels_numpy: {labels_numpy}, min={np.min(labels_numpy, axis=1)}, max={np.max(labels_numpy, axis=1)}")
+    print(f"features_numpy: {features_numpy}")
+    print(f"labels_numpy: {labels_numpy}")
 
-    scaler = MinMaxScaler(feature_range=(0, 1)).fit(features_numpy, labels_numpy)
-    print(scaler.data_min_)
+    features_scaler = MinMaxScaler(feature_range=(0, 1)).fit(features_numpy)
+    labels_scaler = MinMaxScaler(feature_range=(0, 1)).fit(labels_numpy)
+    print(features_scaler.data_min_)
+    print(labels_scaler.data_min_)
 
 
 
