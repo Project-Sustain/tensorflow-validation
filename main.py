@@ -57,7 +57,7 @@ def main():
     print(f"labels_numpy: {labels_numpy}, min_0={np.min(labels_numpy[0])}, max_0={np.max(labels_numpy[0])}")
 
     scaler = MinMaxScaler(feature_range=(0, 1)).fit(features_numpy)
-    print(scaler)
+    print(scaler.data_min_)
 
 
 
