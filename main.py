@@ -58,18 +58,10 @@ def main():
 
     features_scaler = MinMaxScaler(feature_range=(0, 1)).fit(features_numpy)
     labels_scaler = MinMaxScaler(feature_range=(0, 1)).fit(labels_numpy)
-    print(features_scaler.data_min_)
-    print(labels_scaler.data_min_)
 
+    normalized_features = features_scaler.transform(features_numpy)
+    normalized_labels = labels_scaler.transform(labels_numpy)
 
-
-    normalized_features = tf.keras.utils.normalize(
-        features_numpy, axis=-1, order=2
-    ).transpose()
-
-    normalized_labels = tf.keras.utils.normalize(
-        labels_numpy, axis=-1, order=2
-    ).transpose()
 
     pprint(normalized_labels)
     pprint(normalized_features)
