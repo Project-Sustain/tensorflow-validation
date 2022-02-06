@@ -52,14 +52,14 @@ def main():
     labels_numpy = features_and_labels_numpy_transposed[m:]
 
     print(f"features_numpy: {features_numpy}")
-    print(f"labels_numpy: {features_numpy}")
+    print(f"labels_numpy: {labels_numpy}")
 
     normalized_features = tf.keras.utils.normalize(
         features_numpy, axis=0, order=2
     ).transpose()
 
     normalized_labels = tf.keras.utils.normalize(
-        labels_numpy, axis=1, order=2
+        labels_numpy, axis=2, order=2
     ).transpose()
 
     pprint(normalized_labels)
