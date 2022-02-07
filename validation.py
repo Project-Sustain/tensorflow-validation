@@ -18,9 +18,6 @@ def normalize_dataframe(dataframe):
 
 
 def validate_model(models_dir, job_id, model_type, documents, feature_fields, label_field, validation_metric, normalize=True):
-
-    pprint(documents.next())
-
     # Load MongoDB Documents into Pandas DataFrame
     features_df = pd.DataFrame(list(documents))
 
