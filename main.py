@@ -50,7 +50,7 @@ def main():
     documents = collection.find({'COUNTY_GISJOIN': 'G2000010'}, projection)
 
     validation.validate_model(
-        "saved_model"
+        "saved_model",
         "my_model",
         "Linear Regression",
         documents,
