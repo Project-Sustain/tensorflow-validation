@@ -16,7 +16,7 @@ def normalize_dataframe(dataframe):
     return pd.DataFrame(scaled, columns=dataframe.columns)
 
 
-def validate_model(job_id, model_type, documents, feature_fields, label_field, validation_metric, normalize=True):
+def validate_model(models_dir, job_id, model_type, documents, feature_fields, label_field, validation_metric, normalize=True):
 
     # Load MongoDB Documents into Pandas DataFrame
     features_df = pd.DataFrame(list(documents))
@@ -29,8 +29,9 @@ def validate_model(job_id, model_type, documents, feature_fields, label_field, v
     label_df = features_df.pop(label_field)
 
     # Load model from disk
-    model_path = f"saved_model/{job_id}"
+    model_path = f"{models_dir}/{job_id}"
     model = tf.keras.models.load_model(model_path)
     model.summary()
-    validation_results = model.evaluate(features_df, label_df, batch_size=128)
+    validation_results = model.evaluate(features_df, label_df, batch_size=128, return_dict=True)
     info(f"Validation Results: {validation_results}")
+
