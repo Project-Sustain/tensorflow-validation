@@ -33,5 +33,5 @@ def validate_model(models_dir, job_id, model_type, documents, feature_fields, la
     model = tf.keras.models.load_model(model_path)
     model.summary()
     validation_results = model.evaluate(features_df, label_df, batch_size=128, return_dict=True)
-    info(f"Validation Results: {validation_results}")
+    print(f"\n\nValidation Results: {validation_results}")
 
